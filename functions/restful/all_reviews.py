@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
 import time
+import json
 
 # 64 pages max for this test example (handy later)
 URL = "https://www.amazon.in/Baseus-Screenbar-Adjustable-Brightness-Temperature/dp/B08CXL3YQ8/"
@@ -16,6 +17,11 @@ headers = {
 
 # used for rotation
 USER_AGENTS = ["", "", "", "", ""]
+
+
+def all_reviews_req(request):
+    req_json = request.get_json()
+    return all_reviews(req_json["URL"], req_json["headers"])
 
 
 def all_reviews(URL, headers):
@@ -36,14 +42,16 @@ def all_reviews(URL, headers):
 
     all_reviews_parse_tree_list = reviews_soup.find_all(attrs={"data-hook": "review"})
 
+    reviews_list = []
+
     MAX_PAGES = 2
     count = 1
     while not reviews_soup.find(class_="a-disabled a-last") and count <= MAX_PAGES:
         # single page reviews here
         for rev in all_reviews_parse_tree_list:
-            print(rev.find(attrs={"data-hook": "review-title"}).get_text())
-            print(rev.find(attrs={"data-hook": "review-body"}).get_text())
-            print("")
+            rev_title = rev.find(attrs={"data-hook": "review-title"}).get_text()
+            rev_text = rev.find(attrs={"data-hook": "review-body"}).get_text()
+            reviews_list.append({"title": rev_title, "text": rev_text})
 
         time.sleep(1)
 
@@ -55,8 +63,13 @@ def all_reviews(URL, headers):
         reviews_soup = BeautifulSoup(
             requests.get(next_page_URL, headers=headers).content, "html.parser"
         )
-        all_reviews_parse_tree_list = reviews_soup.find_all(attrs={"data-hook": "review"})
+        all_reviews_parse_tree_list = reviews_soup.find_all(
+            attrs={"data-hook": "review"}
+        )
 
         count += 1
 
-all_reviews(URL, headers)
+    return json.dumps({"reviews": reviews_list}, indent=4)
+
+
+# all_reviews(URL, headers)
