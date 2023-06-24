@@ -34,32 +34,24 @@ USER_AGENTS = [
 ]
 
 def get_random_user_agent():
-    return USER_AGENTS[random.randint(0, len(USER_AGENTS) - 1)]
+    return USER_AGENTS[random.randint(0, len(USER_AGENTS))]
 
 
 def all_reviews_req(request):
     req_json = request.get_json()
-    # try:
-    #     if req_json["hdrs"] != None:
-    #         req_hdrs = req_json["hdrs"]
-    #         req_hdrs["User-Agent"] = get_random_user_agent()
-    #         return all_reviews(URL=req_json["URL"], headers=req_hdrs)
-    #     else:
-    #         headers["User-Agent"] = get_random_user_agent()
-    #         return all_reviews(URL=req_json["URL"])
-    # except:
-    #     return "500, Something went wrong"
-    
-    if req_json["hdrs"] != None:
-        req_hdrs = req_json["hdrs"]
-        req_hdrs["User-Agent"] = get_random_user_agent()
-        return all_reviews(URL=req_json["URL"], headers=req_hdrs)
-    else:
-        headers["User-Agent"] = get_random_user_agent()
-        return all_reviews(URL=req_json["URL"])
-    
+    try:
+        if req_json["hdrs"] != None:
+            req_hdrs = req_json["hdrs"]
+            req_hdrs["User-Agent"] = get_random_user_agent()
+            return all_reviews(req_json["URL"], headers=req_hdrs)
+        else:
+            headers["User-Agent"] = get_random_user_agent()
+            return all_reviews(req_json["URL"])
+    except:
+        return "500, Something went wrong"
 
-def all_reviews(URL=URL, headers=headers):
+
+def all_reviews(URL, headers=headers):
     BASE_URL = (
         "https://www." + URL.split(".")[1] + "." + URL.split(".")[2].split("/")[0]
     )
@@ -67,7 +59,7 @@ def all_reviews(URL=URL, headers=headers):
     page = requests.get(URL, headers=headers)
     soup = BeautifulSoup(page.content, "html.parser")
 
-    print(soup)
+    # print(soup)
     print("")
     print("")
     print("-----------")
