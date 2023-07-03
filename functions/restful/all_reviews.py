@@ -34,7 +34,7 @@ USER_AGENTS = [
 ]
 
 def get_random_user_agent():
-    return USER_AGENTS[random.randint(0, len(USER_AGENTS))]
+    return USER_AGENTS[random.randint(0, len(USER_AGENTS) - 1)]
 
 
 def all_reviews_req(request):
