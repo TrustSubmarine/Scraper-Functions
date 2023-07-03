@@ -1,2 +1,3 @@
-Archive*.zip
+*Archive*.zip
 .vscode
+*env
