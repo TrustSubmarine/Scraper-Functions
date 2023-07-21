@@ -20,19 +20,28 @@ const fns = require('./functions/getAllReviews');
 // };
 
 async function getReviews(event, context, callback) {
-    const url = event['url']
-    const headers = event['headers']
+    const eventParams = event["queryStringParameters"];
+    const eventBody = JSON.parse(event["body"]);
+    console.log(eventBody);
+    console.log(event);
+    const url = eventBody['url']
+    console.log(url);
+    console.log("after url");
+    const headers = eventBody['headers']
+    console.log(headers);
     let res = "hi";
-    fns.getAllReviews(url, headers)
+    res = fns.getAllReviews(url, headers)
         .then(reviews => {
-            res = reviews;
+            console.log(reviews);
+            return reviews;
         })
         .catch(error => {
             console.error(error);
             throw error;
         });
     
-    return callback(null, res);
+    return res;
+    // return callback(null, res);
     // TODO: Read up on callback here and why it makes everything work
 }
 

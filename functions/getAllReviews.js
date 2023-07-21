@@ -94,7 +94,7 @@ async function getAllReviews(url, headers) {
   
   const result = JSON.stringify({ reviews: reviewsList }, null, 4);
 
-  console.log(result);
+  // console.log(result);
 
   return result;
 }
