@@ -3,34 +3,27 @@ const fns = require('./functions/getAllReviews');
 
 // Example usage
 // const url = "https://www.amazon.in/Baseus-Screenbar-Adjustable-Brightness-Temperature/dp/B08CXL3YQ8/";
-// const headers = {
-//     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36",
-//     "Accept-Encoding": "gzip, deflate",
-//     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
-//     "DNT": "1",
-//     "Connection": "close",
-//     "Upgrade-Insecure-Requests": "1",
-//     "sec-ch-ua": '"Brave";v="113", "Chromium";v="113", "Not-A.Brand";v="24"',
-//     "sec-ch-ua-mobile": "?0",
-//     "sec-ch-ua-platform-version": '"13.2.0"',
-//     "sec-fetch-dest": "empty",
-//     "sec-fetch-mode": "no-cors",
-//     "sec-fetch-site": "same-origin",
-//     "sec-gpc": "1"
-// };
+const headers = {
+    "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41",
+    "Accept-Encoding": "gzip, deflate",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "DNT": "1",
+    "Origin": "https://www.amazon.in",
+    "Referer": "https://www.amazon.in/",
+    "Connection": "close",
+    "Upgrade-Insecure-Requests": "1"
+  }
 
 async function getReviews(event, context, callback) {
-    const eventParams = event["queryStringParameters"];
-    const eventBody = JSON.parse(event["body"]);
-    console.log(eventBody);
     console.log(event);
-    const url = eventBody['url']
+    const eventParams = event["queryStringParameters"];
+    // const eventBody = JSON.parse(event["body"]);
+    // console.log(eventBody);
+    const url = eventParams['url'];
     console.log(url);
-    console.log("after url");
-    const headers = eventBody['headers']
     console.log(headers);
-    let res = "hi";
-    res = fns.getAllReviews(url, headers)
+
+    const res = fns.getAllReviews(url, headers)
         .then(reviews => {
             console.log(reviews);
             return reviews;
@@ -42,9 +35,8 @@ async function getReviews(event, context, callback) {
     
     return res;
     // return callback(null, res);
-    // TODO: Read up on callback here and why it makes everything work
+    // TODO: Read up on callback here and why it works
 }
 
 // AWS Lambda handler export
-// exports.getReviews = getReviews;
 exports.handler = getReviews;
