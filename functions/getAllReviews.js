@@ -16,6 +16,17 @@ function getRandomUserAgent() {
 }
 
 async function getAllReviews(url, headers) {
+  try {
+    const urlObject = new URL(url);
+  } catch (error) {
+    console.log(error);
+    return JSON.stringify({"error": "invalid url: " + url});
+  }
+
+  const tld = urlObject.hostname.split(".").pop();
+  headers["Origin"] = "https://www.amazon." + tld;
+  headers["Referer"] = "https://www.amazon." + tld;
+
   console.log(url);
   console.log(headers);
 

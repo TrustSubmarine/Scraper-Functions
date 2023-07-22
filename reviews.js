@@ -3,7 +3,7 @@ const fns = require('./functions/getAllReviews');
 
 // Example usage
 // const url = "https://www.amazon.in/Baseus-Screenbar-Adjustable-Brightness-Temperature/dp/B08CXL3YQ8/";
-const headers = {
+let headers = {
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.106 Safari/537.36 OPR/38.0.2220.41",
     "Accept-Encoding": "gzip, deflate",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -20,10 +20,11 @@ async function getReviews(event, context, callback) {
     // const eventBody = JSON.parse(event["body"]);
     // console.log(eventBody);
     const url = eventParams['url'];
-    console.log(url);
+    const decodedUrl = decodeURIComponent(url);
+    console.log(decodedUrl);
     console.log(headers);
 
-    const res = fns.getAllReviews(url, headers)
+    const res = fns.getAllReviews(decodedUrl, headers)
         .then(reviews => {
             console.log(reviews);
             return reviews;
